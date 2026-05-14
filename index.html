@@ -614,7 +614,7 @@
 
     try {
       // If you've set up Formspree:
-      if (FORMSPREE_ID !== 'YOUR_FORMSPREE_ID') {
+      if (FORMSPREE_ID !== 'maqvznqb') {
         const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -664,7 +664,7 @@
   }
 
   async function requestNotify() {
-    if (ONESIGNAL_APP_ID === 'YOUR_ONESIGNAL_APP_ID') {
+    if (ONESIGNAL_APP_ID === '52b3a3d4-e8f2-443a-939c-37074578fb6f') {
       statusEl.className = 'notify-status';
       statusEl.textContent = 'Notification setup not configured yet — check back soon.';
       return;
