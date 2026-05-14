@@ -1,8 +1,6 @@
 // Vercel Serverless function: receive submissions and forward to SendGrid
 // Set these environment variables in Vercel: SENDGRID_API_KEY, TO_EMAIL, FROM_EMAIL
 
-const fetch = global.fetch || require('node-fetch');
-
 // Basic in-memory rate limiting (best-effort; ephemeral across cold starts)
 const recent = new Map();
 const WINDOW_MS = 15 * 1000; // 15s
@@ -11,7 +9,7 @@ const MAX_PER_WINDOW = 5;
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end('Method Not Allowed');
 
-  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown';
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
 
   try {
     const now = Date.now();
@@ -26,7 +24,13 @@ module.exports = async (req, res) => {
 
   let body;
   try {
-    body = typeof req.body === 'object' ? req.body : JSON.parse(req.body);
+    if (typeof req.body === 'object' && req.body !== null) {
+      body = req.body;
+    } else if (typeof req.body === 'string') {
+      body = JSON.parse(req.body);
+    } else {
+      body = {};
+    }
   } catch (e) {
     return res.status(400).json({ error: 'Invalid JSON' });
   }
@@ -56,9 +60,12 @@ module.exports = async (req, res) => {
   const payload = {
     personalizations: [{ to: [{ email: TO_EMAIL }] }],
     from: { email: FROM_EMAIL },
+    reply_to: email && email.includes('@') ? { email } : undefined,
     subject,
     content: [{ type: 'text/plain', value: content }]
   };
+
+  if (!payload.reply_to) delete payload.reply_to;
 
   try {
     const r = await fetch('https://api.sendgrid.com/v3/mail/send', {
@@ -73,12 +80,12 @@ module.exports = async (req, res) => {
     if (!r.ok) {
       const text = await r.text();
       console.error('SendGrid error', r.status, text);
-      return res.status(502).json({ error: 'Failed to send' });
+      return res.status(502).json({ error: 'Failed to send', details: text });
     }
 
     return res.status(200).json({ ok: true });
   } catch (e) {
     console.error('submit error', e);
-    return res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error', details: String(e && e.message ? e.message : e) });
   }
 };
