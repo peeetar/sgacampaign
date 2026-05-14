@@ -934,13 +934,6 @@
 
   renderCandidates();
 
-  async function requestNotify() {
-    if (ONESIGNAL_APP_ID === '52b3a3d4-e8f2-443a-939c-37074578fb6f') {
-      statusEl.className = 'notify-status';
-      statusEl.textContent = 'Notification setup not configured yet — check back soon.';
-      return;
-    }
-
     if (!('Notification' in window)) {
       statusEl.className = 'notify-status error';
       statusEl.textContent = 'Your browser doesn\'t support notifications. Try Chrome on Android.';
