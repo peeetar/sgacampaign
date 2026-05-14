@@ -557,6 +557,8 @@
       <label>Email <span class="optional-tag">optional — if you want us to follow up</span></label>
       <input type="email" id="email" placeholder="your@email.com">
     </div>
+    <!-- honeypot (hidden) to trap bots -->
+    <input type="text" id="hp" name="hp" autocomplete="off" style="display:none">
     <button class="submit-btn" id="submit-btn" onclick="submitForm()">Submit →</button>
   </div>
 
@@ -592,37 +594,42 @@
 </footer>
 
 <script>
-  // ── FORM SUBMIT ──────────────────────────────────────────────
-  // Replace the body of submitForm() with your actual backend/Google Sheets call.
-  // For a quick no-backend solution: use https://formspree.io (free tier)
-  // Set FORMSPREE_ID to your form ID from formspree.io
-  const FORMSPREE_ID = 'maqvznqb'; // ← replace this
+  // ── FORM SUBMIT (Vercel serverless) ──────────────────────────
+  // This posts to a Vercel serverless function at `/api/submit`.
+  // On Vercel set these Environment Variables: SENDGRID_API_KEY, TO_EMAIL, FROM_EMAIL
+
+  // Honeypot field used to trap bots is added in the HTML form (id="hp").
 
   async function submitForm() {
-    const suggestion = document.getElementById('suggestion').value.trim();
+    const suggestionEl = document.getElementById('suggestion');
+    const suggestion = suggestionEl.value.trim();
     const email = document.getElementById('email').value.trim();
+    const hp = document.getElementById('hp') ? document.getElementById('hp').value : '';
     const btn = document.getElementById('submit-btn');
 
     if (!suggestion) {
-      document.getElementById('suggestion').style.borderColor = 'rgba(196,43,43,0.8)';
-      document.getElementById('suggestion').focus();
+      suggestionEl.style.borderColor = 'rgba(196,43,43,0.8)';
+      suggestionEl.focus();
       return;
     }
 
     btn.disabled = true;
     btn.textContent = 'Sending...';
 
+    // save a local draft in case of network issues
+    try { localStorage.setItem('last_suggestion', suggestion); } catch (e) {}
+
     try {
-      // If you've set up Formspree:
-      if (FORMSPREE_ID !== 'maqvznqb') {
-        const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ suggestion, email: email || '(not provided)' })
-        });
-        if (!res.ok) throw new Error('Network error');
-      }
-      // Show success regardless (remove above condition once you plug in a backend)
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ suggestion, email: email || '(not provided)', hp })
+      });
+
+      if (!res.ok) throw new Error('Network');
+
+      // success
+      try { localStorage.removeItem('last_suggestion'); } catch (e) {}
       document.getElementById('form-container').style.display = 'none';
       document.getElementById('form-success').style.display = 'block';
     } catch (e) {
