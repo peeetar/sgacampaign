@@ -157,88 +157,127 @@
     margin-bottom: 2rem;
   }
 
-  .candidates {
+  /* candidate grid — 2 col on mobile, 4 col on wide */
+  .candidates-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1px;
     background: var(--off);
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
+  }
+  @media (min-width: 640px) {
+    .candidates-grid { grid-template-columns: repeat(4, 1fr); }
   }
 
   .candidate-card {
     background: var(--red-dark);
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.85rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.15s;
     position: relative;
   }
+  .candidate-card:hover { background: #6a1010; }
+  .candidate-card.active { background: var(--red); }
+  .candidate-card.active .candidate-role { color: var(--white); }
 
   .candidate-photo {
     width: 100%;
     aspect-ratio: 3/4;
     background: var(--off2);
-    margin-bottom: 1rem;
-    position: relative;
+    margin-bottom: 0.75rem;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-
   .candidate-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    width: 100%; height: 100%; object-fit: cover; display: block;
   }
-
   .photo-placeholder {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
+    font-size: 40px;
     color: rgba(245,240,238,0.15);
     letter-spacing: 0.05em;
   }
-
   .candidate-name {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
+    font-size: 22px;
     letter-spacing: 0.03em;
     line-height: 1;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
-
   .candidate-role {
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--red-bright);
+    line-height: 1.4;
   }
+
+  /* expanded platform panel */
+  .platform-panel {
+    display: none;
+    background: var(--red);
+    padding: 1.75rem 1.5rem;
+    margin-bottom: 1px;
+  }
+  .platform-panel.open { display: block; }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+  }
+  .panel-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+  }
+  .panel-role {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(245,240,238,0.5);
+    margin-top: 6px;
+  }
+  .panel-close {
+    background: none;
+    border: none;
+    color: rgba(245,240,238,0.4);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0 0 0 12px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .panel-close:hover { color: var(--white); }
 
   /* PLATFORM */
   .platform-item {
     border-top: 1px solid var(--off);
-    padding: 1.25rem 0;
+    padding: 1rem 0;
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 1rem;
     align-items: start;
   }
-
   .platform-num {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 13px;
-    color: var(--red-bright);
+    color: rgba(245,240,238,0.4);
     letter-spacing: 0.1em;
     padding-top: 2px;
-    min-width: 24px;
+    min-width: 20px;
   }
-
   .platform-text strong {
     display: block;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     color: var(--white);
   }
-
   .platform-text span {
     font-size: 13px;
     color: rgba(245,240,238,0.5);
@@ -472,7 +511,7 @@
     <p class="eyebrow">SGA Executive Board Elections 2026–27</p>
     <h1 class="hero-headline">
       what do<br>
-      <em>YOU</em><br>
+      <em>YOU</em>
       want?
     </h1>
     <p class="hero-sub">Tell us. We'll get it done. Scroll to meet your candidates and submit your requests.</p>
@@ -483,62 +522,11 @@
 
 <div class="divider"></div>
 
-<!-- CANDIDATES -->
-<section class="section">
-  <p class="section-label">Your candidates</p>
-  <div class="candidates">
-    <div class="candidate-card">
-      <div class="candidate-photo" id="photo-petar">
-        <!-- Replace img below with actual photo: <img src="petar.jpg" alt="Petar Velkovski"> -->
-        <span class="photo-placeholder">P</span>
-      </div>
-      <div class="candidate-name">Petar</div>
-      <div class="candidate-role">Running for President</div>
-    </div>
-    <div class="candidate-card">
-      <div class="candidate-photo" id="photo-tea">
-        <!-- Replace img below with actual photo: <img src="tea.jpg" alt="Tea Kosmajac"> -->
-        <span class="photo-placeholder">T</span>
-      </div>
-      <div class="candidate-name">Tea</div>
-      <div class="candidate-role">Running for VP</div>
-    </div>
-  </div>
-
-  <!-- PLATFORM -->
-  <p class="section-label">What we stand for</p>
-
-  <div class="platform-item">
-    <span class="platform-num">01</span>
-    <div class="platform-text">
-      <strong>A real SGA for a real university</strong>
-      <span>ACT is becoming a fully accredited university. SGA needs to grow with it — transparent, organized, and taken seriously.</span>
-    </div>
-  </div>
-
-  <div class="platform-item">
-    <span class="platform-num">02</span>
-    <div class="platform-text">
-      <strong>An SGA website + card payments</strong>
-      <span>Buy merch, check event info, see what SGA is actually doing — all online. No more chasing people down.</span>
-    </div>
-  </div>
-
-  <div class="platform-item">
-    <span class="platform-num">03</span>
-    <div class="platform-text">
-      <strong>Campus quality of life</strong>
-      <span>Library coffee machine. Vending machines. More student-driven events. The small stuff that actually matters every day.</span>
-    </div>
-  </div>
-
-  <div class="platform-item">
-    <span class="platform-num">04</span>
-    <div class="platform-text">
-      <strong>You talk, we listen</strong>
-      <span>A real feedback loop. What students ask for gets addressed publicly. No more black holes.</span>
-    </div>
-  </div>
+<!-- CANDIDATES — rendered by JS below -->
+<section class="section" id="candidates-section">
+  <p class="section-label">Tap a candidate to see their platform</p>
+  <div class="candidates-grid" id="candidates-grid"></div>
+  <div id="platform-panel" class="platform-panel"></div>
 </section>
 
 <div class="divider"></div>
@@ -585,8 +573,8 @@
 
 <footer>
   <div class="footer-left">
-    <div class="f-big">Petar & Tea</div>
-    <div class="f-small">SGA Executive Board 2026–27</div>
+    <div class="f-big">SGA Candidates</div>
+    <div class="f-small">Executive Board 2026–27 · American College Thessaloniki</div>
   </div>
   <div class="footer-date">
     Elections<br>27 May 2026
@@ -594,9 +582,10 @@
 </footer>
 
 <script>
-  // ── FORM SUBMIT (Vercel serverless) ──────────────────────────
-  // This posts to a Vercel serverless function at `/api/submit`.
-  // On Vercel set these Environment Variables: SENDGRID_API_KEY, TO_EMAIL, FROM_EMAIL
+  // ── FORM SUBMIT (Google Apps Script → Google Sheet) ─────────
+  // Paste your deployed Apps Script web app URL into APPS_SCRIPT_URL.
+
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrfvQVDtHdsUYCUZj39q9xvQKhhQcT8pRV5ykLMXMIPV8MMuaiV4NIg4HFZAPJwgvkWg/exec';
 
   // Honeypot field used to trap bots is added in the HTML form (id="hp").
 
@@ -620,13 +609,20 @@
     try { localStorage.setItem('last_suggestion', suggestion); } catch (e) {}
 
     try {
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ suggestion, email: email || '(not provided)', hp })
-      });
+      if (APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+        throw new Error('Apps Script URL not configured');
+      }
 
-      if (!res.ok) throw new Error('Network');
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams({
+          suggestion,
+          email: email || '(not provided)',
+          hp,
+          source: 'sgacampaign'
+        })
+      });
 
       // success
       try { localStorage.removeItem('last_suggestion'); } catch (e) {}
@@ -634,7 +630,7 @@
       document.getElementById('form-success').style.display = 'block';
     } catch (e) {
       btn.disabled = false;
-      btn.textContent = 'Try again';
+      btn.textContent = APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL' ? 'Set sheet URL' : 'Try again';
     }
   }
 
@@ -642,6 +638,9 @@
   // Uses OneSignal free tier. Replace APP_ID with your OneSignal app ID.
   // Sign up at onesignal.com → create a Web Push app → copy the App ID.
   const ONESIGNAL_APP_ID = '52b3a3d4-e8f2-443a-939c-37074578fb6f'; // ← replace this
+  const ONESIGNAL_SERVICE_WORKER_PATH = '/OneSignalSDKWorker.js';
+  const ONESIGNAL_SERVICE_WORKER_SCOPE = '/';
+  let onesignalInitPromise = null;
 
   const statusEl = document.getElementById('notify-status');
   const notifyBtn = document.getElementById('notify-btn');
@@ -654,21 +653,286 @@
   }
 
   function loadOneSignal() {
-    return new Promise((resolve) => {
-      if (window.OneSignal) { resolve(); return; }
-      const s = document.createElement('script');
-      s.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
-      s.defer = true;
-      s.onload = () => {
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(async (OneSignal) => {
-          await OneSignal.init({ appId: ONESIGNAL_APP_ID });
-          resolve();
-        });
-      };
-      document.head.appendChild(s);
+    if (onesignalInitPromise) return onesignalInitPromise;
+
+    onesignalInitPromise = new Promise((resolve, reject) => {
+      if (window.OneSignal && window.OneSignal.Notifications) {
+        resolve(window.OneSignal);
+        return;
+      }
+
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      window.OneSignalDeferred.push(async function (OneSignal) {
+        try {
+          await OneSignal.init({
+            appId: ONESIGNAL_APP_ID,
+            serviceWorkerPath: ONESIGNAL_SERVICE_WORKER_PATH,
+            serviceWorkerParam: { scope: ONESIGNAL_SERVICE_WORKER_SCOPE },
+          });
+          OneSignal.Notifications.addEventListener('permissionChange', function (permission) {
+            if (permission) {
+              localStorage.setItem('notify_subscribed', 'true');
+              notifyBtn.textContent = '✓ You\'re signed up';
+              notifyBtn.disabled = true;
+              notifyBtn.style.opacity = '0.5';
+              statusEl.className = 'notify-status success';
+              statusEl.textContent = 'You\'ll get a notification the morning of May 27.';
+            }
+          });
+          resolve(OneSignal);
+        } catch (error) {
+          reject(error);
+        }
+      });
+
+      const script = document.createElement('script');
+      script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+      script.defer = true;
+      script.onerror = () => reject(new Error('OneSignal SDK failed to load'));
+      document.head.appendChild(script);
     });
+
+    return onesignalInitPromise;
   }
+
+  // ── CANDIDATES DATA ──────────────────────────────────────────
+  // To add a real photo: set photo to the filename e.g. "petar.jpg"
+  // To update a candidate: edit their name, role, or platform array.
+  // Each candidate has exactly 3 platform points: { title, desc }
+
+  const CANDIDATES = [
+    {
+      name: "Petar",
+      last: "Velkovski",
+      role: "Sophomore Student Rep - Running for Exec Board",
+      photo: null,
+      platform: [
+        { title: "A real SGA for a real university", desc: "ACT is becoming a fully accredited university. SGA needs to grow with it — transparent, organized, and taken seriously." },
+        { title: "SGA website + card payments", desc: "Buy merch, check event info, see what SGA is actually doing — all online. No more chasing people down." },
+        { title: "You talk, we listen", desc: "A real feedback loop. What students ask for gets addressed publicly. No more black holes." }
+      ]
+    },
+    {
+      name: "Tea",
+      last: "Kosmajac",
+      role: "Running for VP of Academics",
+      photo: null,
+      platform: [
+        { title: "Modernizing academic support", desc: "Stronger tutoring networks, clearer academic policies, and a direct line between students and faculty." },
+        { title: "Campus quality of life", desc: "Library coffee machine. Vending machines. More student-driven events. The small stuff that actually matters every day." },
+        { title: "Student services that actually serve", desc: "Leverage experience in student services to cut bureaucracy and make getting help faster and easier." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Three",
+      role: "Running for VP of Student Affairs",
+      photo: null,
+      platform: [
+        { title: "More campus events", desc: "Monthly themed events, international student mixers, and end-of-semester celebrations that actually bring people together." },
+        { title: "Safer campus spaces", desc: "Better lighting, improved late-night transport, and clear reporting channels for student concerns." },
+        { title: "Inclusive community", desc: "Representation for all student groups — international, local, and postgrad — in every SGA decision." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Four",
+      role: "Running for VP of Communications",
+      photo: null,
+      platform: [
+        { title: "SGA visibility", desc: "Weekly updates, a real social media presence, and transparent meeting minutes published after every session." },
+        { title: "Student newsletter", desc: "A monthly digest of what SGA has done, what's coming up, and how to get involved — sent directly to every student." },
+        { title: "Open feedback channels", desc: "Anonymous suggestion box, regular open-floor sessions, and public follow-up on every raised issue." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Five",
+      role: "Running for VP of Finance",
+      photo: null,
+      platform: [
+        { title: "Budget transparency", desc: "Publish a full breakdown of SGA spending every semester so students know exactly where their money goes." },
+        { title: "Merch + card payments", desc: "Launch the SGA online store with card payment support — no more cash-only at the table." },
+        { title: "Funding access for clubs", desc: "Streamline the club funding application process so student orgs can get support without weeks of back-and-forth." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Six",
+      role: "Running for Secretary",
+      photo: null,
+      platform: [
+        { title: "Meeting minutes that matter", desc: "Clear, timely, and publicly available records of every SGA meeting — no more wondering what was decided." },
+        { title: "Document everything", desc: "Build an SGA archive so institutional knowledge doesn't disappear when board members graduate." },
+        { title: "Organized onboarding", desc: "A structured onboarding process for new SGA members so the board hits the ground running every year." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Seven",
+      role: "Running for Events Coordinator",
+      photo: null,
+      platform: [
+        { title: "Student-driven event planning", desc: "Collect event ideas from the student body before planning — not after. You tell us, we make it happen." },
+        { title: "Consistent event calendar", desc: "At least one meaningful event per month, announced in advance, with proper promotion." },
+        { title: "Collaborate with local venues", desc: "Partner with venues in Thessaloniki to give students discounts and access to spaces beyond campus." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Eight",
+      role: "Running for Class Representative",
+      photo: null,
+      platform: [
+        { title: "Direct line to admin", desc: "Regular check-ins with faculty and admin to raise class-level concerns before they become bigger problems." },
+        { title: "Grade transparency", desc: "Push for clearer grading rubrics and faster feedback turnaround on assessments." },
+        { title: "Study space improvements", desc: "More quiet zones, extended library hours, and better access to group study rooms." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Nine",
+      role: "Running for VP of Sports",
+      photo: null,
+      platform: [
+        { title: "Revive intramural sports", desc: "Restart the intramural league with football, basketball, and volleyball — open to all students regardless of skill level." },
+        { title: "Better sports facilities access", desc: "Longer facility booking windows and a digital reservation system so teams don't have to chase down a coordinator." },
+        { title: "Inter-university competition", desc: "Organize at least one inter-university sports event per year to put ACT on the map." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Ten",
+      role: "Running for VP of Culture",
+      photo: null,
+      platform: [
+        { title: "International culture week", desc: "A multi-day celebration of the nationalities on campus — food, music, exhibitions, and performances." },
+        { title: "Arts on campus", desc: "Rotating student art installations, a photography wall, and support for student creatives to exhibit their work." },
+        { title: "Language exchange program", desc: "Pair students from different language backgrounds for informal language practice and cultural exchange." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Eleven",
+      role: "Running for VP of Sustainability",
+      photo: null,
+      platform: [
+        { title: "Campus recycling overhaul", desc: "More clearly labeled bins, a composting pilot, and a student-led sustainability audit of campus waste." },
+        { title: "Green initiatives fund", desc: "Allocate SGA budget to fund student-proposed sustainability projects on campus." },
+        { title: "Partner with the city", desc: "Connect ACT students with Thessaloniki's municipal green initiatives and volunteer programs." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Twelve",
+      role: "Running for VP of Technology",
+      photo: null,
+      platform: [
+        { title: "SGA website launch", desc: "Build and maintain the official SGA website with event listings, meeting minutes, and a contact form." },
+        { title: "Digital student ID rollout", desc: "Push admin to implement a digital student card for library, gym, and campus access." },
+        { title: "Tech support resource hub", desc: "Create a student-run tech help page covering VPN access, printing, software licenses, and campus Wi-Fi issues." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Thirteen",
+      role: "Running for First Year Rep",
+      photo: null,
+      platform: [
+        { title: "Better orientation", desc: "An orientation week that actually prepares first years — campus tour, system walkthroughs, and a buddy program." },
+        { title: "First year voice", desc: "A dedicated monthly session where first years can raise concerns directly with the SGA board." },
+        { title: "Social integration", desc: "Events specifically designed to help first years meet each other and connect with older students." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Fourteen",
+      role: "Running for Graduate Rep",
+      photo: null,
+      platform: [
+        { title: "Graduate student recognition", desc: "Ensure postgrad students have a formal seat at the SGA table and their concerns are addressed separately from undergrad issues." },
+        { title: "Career services push", desc: "Lobby for more career events, alumni connections, and internship listings targeted at graduate students." },
+        { title: "Research support", desc: "Advocate for better library database access, research funding information, and thesis support resources." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Fifteen",
+      role: "Running for VP of Wellbeing",
+      photo: null,
+      platform: [
+        { title: "Mental health resources", desc: "Push for a visible, accessible campus counseling service with clear booking instructions and no stigma." },
+        { title: "Student stress audit", desc: "Survey the student body on academic pressure, workload, and wellbeing — and bring the data to admin." },
+        { title: "Quiet spaces on campus", desc: "Designate at least two phone-free, low-stimulation rest areas on campus for students who need to decompress." }
+      ]
+    },
+    {
+      name: "Candidate",
+      last: "Sixteen",
+      role: "Running for International Rep",
+      photo: null,
+      platform: [
+        { title: "Visa & paperwork support", desc: "Create a clear, maintained guide for international students navigating Greek residency, visa renewals, and documentation." },
+        { title: "Housing resources", desc: "Build a shared housing board where students can list and find accommodation near campus." },
+        { title: "Welcome network", desc: "Connect incoming international students with current students from the same country before they arrive." }
+      ]
+    }
+  ];
+
+  let activeIdx = null;
+
+  function renderCandidates() {
+    const grid = document.getElementById('candidates-grid');
+    const panel = document.getElementById('platform-panel');
+    if (!grid || !panel) return;
+
+    grid.innerHTML = CANDIDATES.map((c, i) => `
+      <div class="candidate-card${activeIdx === i ? ' active' : ''}" onclick="toggleCandidate(${i})" role="button" aria-expanded="${activeIdx === i}">
+        <div class="candidate-photo">
+          ${c.photo
+            ? `<img src="${c.photo}" alt="${c.name} ${c.last}">`
+            : `<span class="photo-placeholder">${c.name[0]}</span>`}
+        </div>
+        <div class="candidate-name">${c.name}</div>
+        <div class="candidate-role">${c.role}</div>
+      </div>
+    `).join('');
+
+    if (activeIdx !== null) {
+      const c = CANDIDATES[activeIdx];
+      panel.className = 'platform-panel open';
+      panel.innerHTML = `
+        <div class="panel-header">
+          <div>
+            <div class="panel-name">${c.name}<br>${c.last}</div>
+            <div class="panel-role">${c.role}</div>
+          </div>
+          <button class="panel-close" onclick="toggleCandidate(${activeIdx})" aria-label="Close">✕</button>
+        </div>
+        ${c.platform.map((p, j) => `
+          <div class="platform-item">
+            <span class="platform-num">0${j + 1}</span>
+            <div class="platform-text">
+              <strong>${p.title}</strong>
+              <span>${p.desc}</span>
+            </div>
+          </div>
+        `).join('')}
+      `;
+      // scroll panel into view smoothly
+      setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    } else {
+      panel.className = 'platform-panel';
+      panel.innerHTML = '';
+    }
+  }
+
+  function toggleCandidate(i) {
+    activeIdx = activeIdx === i ? null : i;
+    renderCandidates();
+  }
+
+  renderCandidates();
 
   async function requestNotify() {
     if (ONESIGNAL_APP_ID === '52b3a3d4-e8f2-443a-939c-37074578fb6f') {
@@ -687,10 +951,18 @@
     notifyBtn.disabled = true;
 
     try {
-      await loadOneSignal();
-      await window.OneSignal.Notifications.requestPermission();
-      const isEnabled = await window.OneSignal.Notifications.permission;
-      if (isEnabled) {
+      const OneSignal = await loadOneSignal();
+
+      if (!OneSignal.Notifications.isPushSupported()) {
+        throw new Error('Push is not supported on this browser');
+      }
+
+      const beforePermission = OneSignal.Notifications.permission;
+      if (!beforePermission) {
+        await OneSignal.User.PushSubscription.optIn();
+      }
+
+      if (OneSignal.Notifications.permission || OneSignal.User.PushSubscription.optedIn) {
         localStorage.setItem('notify_subscribed', 'true');
         notifyBtn.textContent = '✓ You\'re signed up';
         notifyBtn.style.opacity = '0.5';
@@ -704,7 +976,7 @@
     } catch (e) {
       notifyBtn.disabled = false;
       statusEl.className = 'notify-status error';
-      statusEl.textContent = 'Something went wrong. Try again.';
+      statusEl.textContent = e && e.message ? e.message : 'Something went wrong. Try again.';
     }
   }
 </script>
