@@ -352,6 +352,7 @@
     outline: none;
     transition: border-color 0.2s;
     border-radius: 0;
+    appearance: none;
     -webkit-appearance: none;
   }
 
@@ -398,62 +399,6 @@
   .form-success .big { font-family: 'Bebas Neue', sans-serif; font-size: 48px; line-height: 1; margin-bottom: 0.5rem; }
   .form-success .small { font-size: 14px; color: rgba(245,240,238,0.6); line-height: 1.6; }
 
-  /* NOTIFY */
-  .notify-section {
-    padding: 3rem 1.5rem;
-    border-top: 1px solid var(--off);
-  }
-
-  .notify-headline {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 12vw, 60px);
-    line-height: 0.9;
-    margin-bottom: 0.75rem;
-  }
-
-  .notify-sub {
-    font-size: 14px;
-    color: rgba(245,240,238,0.55);
-    line-height: 1.6;
-    margin-bottom: 1.75rem;
-    max-width: 320px;
-  }
-
-  .notify-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: transparent;
-    border: 1px solid rgba(245,240,238,0.3);
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 14px 20px;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    width: 100%;
-    letter-spacing: 0.02em;
-  }
-  .notify-btn:hover { border-color: var(--white); background: var(--off2); }
-
-  .notify-icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-  }
-
-  .notify-status {
-    margin-top: 1rem;
-    font-size: 13px;
-    color: rgba(245,240,238,0.45);
-    line-height: 1.5;
-    min-height: 20px;
-  }
-
-  .notify-status.success { color: #7ECBA1; }
-  .notify-status.error { color: #F08080; }
-
   /* FOOTER */
   footer {
     padding: 2rem 1.5rem 3rem;
@@ -499,7 +444,6 @@
     to { opacity: 1; }
   }
 
-  /* SERVICE WORKER SCRIPT inline */
 </style>
 </head>
 <body>
@@ -554,21 +498,6 @@
     <div class="big">Got it.</div>
     <div class="small">We read every single one.<br>Now tell your friends to vote on May 27.</div>
   </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- NOTIFY -->
-<section class="notify-section">
-  <h2 class="notify-headline">don't<br>forget<br>to vote.</h2>
-  <p class="notify-sub">Wednesday, May 27. Get a notification on your phone that morning so you don't miss it.</p>
-  <button class="notify-btn" id="notify-btn" onclick="requestNotify()">
-    <svg class="notify-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-    </svg>
-    Remind me on May 27
-  </button>
-  <p class="notify-status" id="notify-status"></p>
 </section>
 
 <footer>
@@ -632,67 +561,6 @@
       btn.disabled = false;
       btn.textContent = APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL' ? 'Set sheet URL' : 'Try again';
     }
-  }
-
-  // ── PUSH NOTIFICATIONS ───────────────────────────────────────
-  // Uses OneSignal free tier. Replace APP_ID with your OneSignal app ID.
-  // Sign up at onesignal.com → create a Web Push app → copy the App ID.
-  const ONESIGNAL_APP_ID = '52b3a3d4-e8f2-443a-939c-37074578fb6f'; // ← replace this
-  const ONESIGNAL_SERVICE_WORKER_PATH = '/OneSignalSDKWorker.js';
-  const ONESIGNAL_SERVICE_WORKER_SCOPE = '/';
-  let onesignalInitPromise = null;
-
-  const statusEl = document.getElementById('notify-status');
-  const notifyBtn = document.getElementById('notify-btn');
-
-  // Check if already subscribed
-  if (localStorage.getItem('notify_subscribed') === 'true') {
-    notifyBtn.textContent = '✓ You\'re signed up';
-    notifyBtn.disabled = true;
-    notifyBtn.style.opacity = '0.5';
-  }
-
-  function loadOneSignal() {
-    if (onesignalInitPromise) return onesignalInitPromise;
-
-    onesignalInitPromise = new Promise((resolve, reject) => {
-      if (window.OneSignal && window.OneSignal.Notifications) {
-        resolve(window.OneSignal);
-        return;
-      }
-
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      window.OneSignalDeferred.push(async function (OneSignal) {
-        try {
-          await OneSignal.init({
-            appId: ONESIGNAL_APP_ID,
-            serviceWorkerPath: ONESIGNAL_SERVICE_WORKER_PATH,
-            serviceWorkerParam: { scope: ONESIGNAL_SERVICE_WORKER_SCOPE },
-          });
-          OneSignal.Notifications.addEventListener('permissionChange', function (permission) {
-            if (permission) {
-              localStorage.setItem('notify_subscribed', 'true');
-              notifyBtn.textContent = '✓ You\'re signed up';
-              notifyBtn.disabled = true;
-              notifyBtn.style.opacity = '0.5';
-              statusEl.className = 'notify-status success';
-              statusEl.textContent = 'You\'ll get a notification the morning of May 27.';
-            }
-          });
-          resolve(OneSignal);
-        } catch (error) {
-          reject(error);
-        }
-      });
-
-      const script = document.createElement('script');
-      script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
-      script.defer = true;
-      script.onerror = () => reject(new Error('OneSignal SDK failed to load'));
-      document.head.appendChild(script);
-    });
-
-    return onesignalInitPromise;
   }
 
   // ── CANDIDATES DATA ──────────────────────────────────────────
@@ -934,51 +802,6 @@
 
   renderCandidates();
 
-  async function requestNotify() {
-    if (ONESIGNAL_APP_ID === 'YOUR_ONESIGNAL_APP_ID') {
-      statusEl.className = 'notify-status';
-      statusEl.textContent = 'Notification setup not configured yet — check back soon.';
-      return;
-    }
-
-    if (!('Notification' in window)) {
-      statusEl.className = 'notify-status error';
-      statusEl.textContent = 'Your browser doesn\'t support notifications. Try Chrome on Android.';
-      return;
-    }
-
-    statusEl.textContent = 'Loading...';
-    notifyBtn.disabled = true;
-
-    try {
-      const OneSignal = await loadOneSignal();
-
-      if (!OneSignal.Notifications.isPushSupported()) {
-        throw new Error('Push is not supported on this browser');
-      }
-
-      const beforePermission = OneSignal.Notifications.permission;
-      if (!beforePermission) {
-        await OneSignal.User.PushSubscription.optIn();
-      }
-
-      if (OneSignal.Notifications.permission || OneSignal.User.PushSubscription.optedIn) {
-        localStorage.setItem('notify_subscribed', 'true');
-        notifyBtn.textContent = '✓ You\'re signed up';
-        notifyBtn.style.opacity = '0.5';
-        statusEl.className = 'notify-status success';
-        statusEl.textContent = 'You\'ll get a notification the morning of May 27.';
-      } else {
-        notifyBtn.disabled = false;
-        statusEl.className = 'notify-status error';
-        statusEl.textContent = 'Permission denied. You can enable it in your browser settings.';
-      }
-    } catch (e) {
-      notifyBtn.disabled = false;
-      statusEl.className = 'notify-status error';
-      statusEl.textContent = e && e.message ? e.message : 'Something went wrong. Try again.';
-    }
-  }
 </script>
 </body>
 </html>
